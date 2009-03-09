@@ -15,11 +15,22 @@ class Controller_Todoist extends Controller {
 
 	public function action_index()
 	{
+		// Get a list of all projects
 		$projects = $this->todoist->get_projects();
 
 		foreach ($projects as $project)
 		{
-			echo Kohana::debug($this->todoist->get_items($project['project_id']));
+			// Display the project name
+			echo Kohana::debug($project->name);
+
+			// Get all completed items
+			$completed = $this->todoist->get_completed_items($project->id);
+
+			foreach ($completed as $item)
+			{
+				// Display the item content
+				echo Kohana::debug($item->content);
+			}
 		}
 	}
 

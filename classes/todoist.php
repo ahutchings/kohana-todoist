@@ -18,36 +18,89 @@ class Todoist_Core {
 		$this->api_key = $api_key;
 	}
 
-	public function get_projects()
+	protected function get_response($method, array $params = NULL)
 	{
-		// Build the query string
-		$query = http_build_query(array('token' => $this->api_key));
+		// Add the token to the parameters
+		$params['token'] = $this->api_key;
 
-		$request = remote::get(Todoist::API_URL.'getProjects?'.$query);
+		// Make an API request
+		$request = remote::get(Todoist::API_URL.$method.'?'.http_build_query($params, NULL, '&'));
 
-		if ( ! $request['status'])
+		if ($request['status'] === FALSE)
 		{
-			throw new Kohana_Exception('Unable to retrieve project list: :error',
-				array(':error' => $request['response']));
+			throw new Kohana_Exception('Todoist API request for :method failed: :error',
+				array(':method' => $method, ':error' => $request['response']));
 		}
 
+		// Decode the response
 		return json_decode($request['response']);
 	}
 
-	public function get_items($project, $uncomplete = TRUE)
+	public function get_labels()
 	{
-		// Build the query string
-		$query = http_build_query(array('token' => $this->api_key, 'project_id' => $project));
+		return $this->get_response('getLabels');
+	}
 
-		$request = remote::get(Todoist::API_URL.'getUncompletedItems?'.$query);
+	public function get_projects()
+	{
+		return $this->get_response('getProjects');
+	}
 
-		if ( ! $request['status'])
+	public function get_project($project)
+	{
+		// Add the project ID to the parameters
+		$params = array('project_id' => $project);
+
+		return $this->get_response('getProject', $params);
+	}
+
+	public function get_items(array $ids)
+	{
+		// Add the IDs to the parameters
+		$params['ids'] = '['.implode(', ', $ids).']';
+
+		return $this->get_response('getItemsById', $params);
+	}
+
+	public function get_uncompleted_items($project)
+	{
+		// Add the project ID to the parameters
+		$params = array('project_id' => $project);
+
+		return $this->get_response('getCompletedItems', $params);
+	}
+
+	public function get_completed_items($project, $offset = NULL)
+	{
+		// Add the project ID to the parameters
+		$params = array('project_id' => $project);
+
+		if (is_integer($offset) OR ctype_digit($offset))
 		{
-			throw new Kohana_Exception('Unable to retrieve items for :project: :error',
-				array('project' => $project, ':error' => $request['response']));
+			// Add the offset
+			$params['offset'] = (int) $offset;
 		}
 
-		return json_decode($request['response']);
+		return $this->get_response('getCompletedItems', $params);
+	}
+
+	public function complete_items(array $ids)
+	{
+		// Add the IDs to the parameters
+		$params['ids'] = '['.implode(', ', $ids).']';
+
+		return $this->get_response('completeItems', $params);
+	}
+
+	public function delete_items($project, array $ids)
+	{
+		// Add the project ID to the parameters
+		$params = array('project_id' => $project);
+
+		// Add the IDs to the parameters
+		$params['ids'] = '['.implode(', ', $ids).']';
+
+		return $this->get_response('deleteItems', $params);
 	}
 
 } // End Todoist
