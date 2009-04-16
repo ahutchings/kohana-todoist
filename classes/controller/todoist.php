@@ -18,16 +18,18 @@ class Controller_Todoist extends Controller {
 		foreach ($projects as $project)
 		{
 			// Display the project name
-			echo Kohana::debug($project->name);
+			echo '<h1>', $project['name'], '</h1>';
 
 			// Get all completed items
-			$completed = $this->todoist->get_completed_items($project->id);
+			$completed = $this->todoist->get_uncompleted_items($project['id']);
 
+			echo '<ul>';
 			foreach ($completed as $item)
 			{
 				// Display the item content
-				echo Kohana::debug($item->content);
+				echo '<li>', $item['content'], '</li>';
 			}
+			echo '</ul>';
 		}
 	}
 
