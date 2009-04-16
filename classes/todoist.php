@@ -303,7 +303,7 @@ class Todoist_Core {
 		if (isset($item['priority']))
 		{
 			// Normalize the priority to be between 1 and 4
-			$params['priority'] = max(min($item['priority'], 1), 4);
+			$params['priority'] = max(min($item['priority'], 4), 1);
 		}
 
 		return $this->_request('addItem', $params);
