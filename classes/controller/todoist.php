@@ -6,11 +6,8 @@ class Controller_Todoist extends Controller {
 	{
 		parent::__construct($request);
 
-		// Load the token
-		$token = Kohana::config('todoist', FALSE)->token;
-
-		// Create a new instance of Todoist
-		$this->todoist = new Todoist($token);
+		// Create a new Todoist instance
+		$this->todoist = Todoist::instance();
 	}
 
 	public function action_index()
