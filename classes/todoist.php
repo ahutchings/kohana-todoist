@@ -4,7 +4,7 @@
  *
  * @package    Kohana
  * @author     Kohana Team
- * @copyright  (c) 2008-2009 Kohana Team
+ * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
 class Todoist_Core {
@@ -13,7 +13,7 @@ class Todoist_Core {
 	const API_URL = 'https://todoist.com/API/';
 
 	// Unkown error
-	const ERROR_UNKNOWN            = 0x4100; // Unknown error
+	const ERROR_UNKNOWN            = 0x4100;
 
 	// Login error code
 	const ERROR_TOKEN              = 0x4101;
@@ -25,14 +25,14 @@ class Todoist_Core {
 	const ERROR_ALREADY_REGISTERED = 0x4120;
 	const ERROR_TOO_SHORT_PASSWORD = 0x4121;
 	const ERROR_INVALID_EMAIL      = 0x4122;
-	const ERROR_INVALID_TIMEZONE   = 0x4123; // Invalid time zone
-	const ERROR_INVALID_FULL_NAME  = 0x4124; // Invalid full name
+	const ERROR_INVALID_TIMEZONE   = 0x4123;
+	const ERROR_INVALID_FULL_NAME  = 0x4124;
 
-	// Instances
+	// Instances by token
 	protected static $instances = array();
 
 	/**
-	 * Returns the Todoist instance for the given token. If not token is given,
+	 * Returns an instance for the given token. If not token is given,
 	 * the token will be loaded from the Todoist configuration file.
 	 *
 	 * @param   string   API token
@@ -98,6 +98,7 @@ class Todoist_Core {
 	/**
 	 * Registers a new user with the given information.
 	 *
+	 * @throws  Todoist_Exception
 	 * @param   string   full name
 	 * @param   string   email address
 	 * @param   string   password, at least 5 characters
