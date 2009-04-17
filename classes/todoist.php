@@ -190,6 +190,72 @@ class Todoist_Core {
 		return $timezones;
 	}
 
+	/**
+	 * Parses style tags and converts them to HTML
+	 */
+	public static function html($content)
+	{
+		if (strpos($content, '%') === FALSE)
+		{
+			// No styles applied
+			return $content;
+		}
+
+		// Find all style tags
+		preg_match_all('/%\(([buihl]+)\)(.+?)%/', $content, $matches, PREG_SET_ORDER);
+
+		// Conversions
+		$convert = array();
+
+		foreach ($matches as $match)
+		{
+			list ($search, $type, $replace) = $match;
+
+			$start = $end = array();
+
+			if (strstr($type, 'b'))
+			{
+				// Add the bold tag
+				$start[] = '<b>';
+
+				// End the tag
+				array_unshift($end, '</b>');
+			}
+
+			if (strstr($type, 'i'))
+			{
+				// Add the italic tag
+				$start[] = '<i>';
+
+				// End the tag
+				array_unshift($end, '</i>');
+			}
+
+			if (strstr($type, 'u'))
+			{
+				// Add the underline tag
+				$start[] = '<u>';
+
+				// End the tag
+				array_unshift($end, '</u>');
+			}
+
+			if (strstr($type, 'hl'))
+			{
+				// Add the highlight tag
+				$start = '<span style="background-color:#faa">';
+
+				// End the tag
+				array_unshift($end, '</style>');
+			}
+
+			// Add the conversion to the list
+			$convert[$search] = implode('', $start).$replace.implode('', $end);
+		}
+
+		return strtr($content, $convert);
+	}
+
 	// Todoist API token
 	protected $_token = '';
 
