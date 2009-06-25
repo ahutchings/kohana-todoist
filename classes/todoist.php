@@ -7,7 +7,7 @@
  * @copyright  (c) 2009 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-class Todoist_Core {
+class Todoist {
 
 	// Secure Todoist API base URL
 	const API_URL = 'https://todoist.com/API/';
@@ -72,7 +72,7 @@ class Todoist_Core {
 		try
 		{
 			// Make an API request
-			$response = remote::get(Todoist::API_URL.'login?'.http_build_query($params, NULL, '&'));
+			$response = Remote::get(Todoist::API_URL.'login?'.http_build_query($params, NULL, '&'));
 		}
 		catch (Kohana_Exception $e)
 		{
@@ -116,7 +116,7 @@ class Todoist_Core {
 		try
 		{
 			// Make an API request
-			$response = remote::get(Todoist::API_URL.'register?'.http_build_query($params, NULL, '&'));
+			$response = Remote::get(Todoist::API_URL.'register?'.http_build_query($params, NULL, '&'));
 		}
 		catch (Kohana_Exception $e)
 		{
@@ -174,7 +174,7 @@ class Todoist_Core {
 			try
 			{
 				// Get the timezone list
-				$timezones = json_decode(remote::get(Todoist::API_URL.'getTimezones'));
+				$timezones = json_decode(Remote::get(Todoist::API_URL.'getTimezones'));
 			}
 			catch (Kohana_Exception $e)
 			{
@@ -486,11 +486,12 @@ class Todoist_Core {
 		// Add the token to the parameters
 		$params['token'] = $this->_token;
 
-		// Make an API request
-		$response = remote::get(Todoist::API_URL.$method.'?'.http_build_query($params, NULL, '&'));
-
 		try
 		{
+			// Make an API request
+			$response = Remote::get(Todoist::API_URL.$method.'?'.http_build_query($params, NULL, '&'));
+
+			echo Kohana::debug($response);
 		}
 		catch (Kohana_Exception $e)
 		{
