@@ -490,8 +490,6 @@ class Todoist {
 		{
 			// Make an API request
 			$response = Remote::get(Todoist::API_URL.$method.'?'.http_build_query($params, NULL, '&'));
-
-			echo Kohana::debug($response);
 		}
 		catch (Kohana_Exception $e)
 		{
