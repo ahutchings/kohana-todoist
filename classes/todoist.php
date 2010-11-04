@@ -312,6 +312,43 @@ class Todoist {
 	}
 
 	/**
+	 * Add a new project and return the details.
+	 *
+	 * @param   array   project details: name, [color], [indent], [order]
+	 * @return  array
+	 */
+	public function add_project($project)
+	{
+        if ( ! is_array($project))
+        {
+            // Must always be an array
+            $project = array('name' => $project);
+        }
+
+        $params['name'] = $project['name'];
+
+		if (isset($project['color']))
+		{
+			// Color is optional
+			$params['color'] = $project['color'];
+		}
+
+		if (isset($project['indent']))
+		{
+			// Indent is optional
+			$params['indent'] = $project['indent'];
+		}
+
+		if (isset($project['order']))
+		{
+		    // Order is optional
+			$params['order'] = $project['order'];
+		}
+
+		return $this->_request('addProject', $params);
+	}
+
+	/**
 	 * Get a list of uncompleted items of a project.
 	 *
 	 * @param   integer   project id
